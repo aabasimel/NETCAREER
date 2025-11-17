@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "apps.posts",
     "apps.connections",
     "apps.notifications",
+    'django_extensions',
+
 ]
 
 MIDDLEWARE = [
