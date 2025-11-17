@@ -8,6 +8,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone as datimezone
 
 class CustomUserManager(BaseUserManager):
     """Custom manager for User model using email instead of username."""
@@ -42,7 +43,7 @@ class User(AbstractUser):
         ("admin", "Admin"),       
     ]
 
-    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
 
     first_name = models.CharField(max_length=100)
 
@@ -58,14 +59,14 @@ class User(AbstractUser):
 
     is_verified = models.BooleanField(default=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
     updated_at = models.DateTimeField(auto_now=True)
 
     is_active = models.BooleanField(default=True)
 
     is_staff = models.BooleanField(default=False)
-    
+
     is_superuser = models.BooleanField(default=False)
 
 
