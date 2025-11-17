@@ -5,7 +5,6 @@ import uuid
 
 class Profile(models.Model):
     profile_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    profile_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField('users.User', on_delete=models.CASCADE, related_name='profile')
     headline = models.CharField(max_length=255, blank=True)
     about = models.TextField(blank=True)
