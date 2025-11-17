@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 
 class Company(models.Model):
 
@@ -12,21 +12,14 @@ class Company(models.Model):
         ('1001-5000', '1001-5000 employees'),
         ('5000+', '5000+ employees'),
     )
-
+    company_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
-
     description = models.TextField()
-
     website = models.URLField()
-
     logo = models.ImageField(upload_to='company_logos/', null=True, blank=True)
-
     cover_image = models.ImageField(upload_to='company_covers/', null=True, blank=True)
-
     industry = models.CharField(max_length=255)
-
     company_size = models.CharField(max_length=20, choices=COMPANY_SIZE_CHOICES)
-
     founded_year = models.IntegerField()
 
     headquarters = models.CharField(max_length=255)
