@@ -44,23 +44,15 @@ class User(AbstractUser):
     ]
 
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-
     first_name = models.CharField(max_length=100)
-
     last_name = models.CharField(max_length=100)
-
     email = models.EmailField(max_length=255, unique=True)
-
     phone_number = models.CharField(max_length=20, blank=True, null=True)
-
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="jobseeker")
-
     admin_requested = models.BooleanField(default=False)
-
     is_verified = models.BooleanField(default=False)
-
+    
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
-
     updated_at = models.DateTimeField(auto_now=True)
 
     is_active = models.BooleanField(default=True)
