@@ -11,7 +11,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.exceptions import TokenError
-from .serializers import EmailTokenObtainSerializer, UserRegisterSerializer, UserLoginSerializer, UserSerializer,VerifyEmailSerializer
+from .serializers import EmailTokenObtainSerializer, UserRegistrationSerializer, UserLoginSerializer, UserSerializer,VerifyEmailSerializer
 from .utils import generate_email_token
 from .tasks import send_email_verification
 import jwt
@@ -23,12 +23,15 @@ from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
 from .models import User
-from .serializers import UserRegisterSerializer
 from rest_framework.renderers import JSONRenderer
+from rest_framework.decorators  import api_view, permission_classes
+from .permissions import  IsAdmin,  IsEmployer, IsJobSeeker
+from django_filters.rest_framework import DjangoFilterBackend, OrderingFilter
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 
 class UserRegistrationView(GenericAPIView):
     permission_classes = [AllowAny]
-    serializer_class = UserRegisterSerializer
+    serializer_class = UserRegistrationSerializer
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -176,3 +179,56 @@ class UserLoginView(GenericAPIView):
             "refresh": str(refresh),
             "access": str(access),
         }, status=200)
+    
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def logout_view(request):
+    try:
+        refresh_token = request.data.get('refresh')
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+        return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for User model providing CRUD operations.
+    """
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["role"]
+    search_fields = ["first_name", "last_name", "email"]
+    ordering_fields = ["first_name", "last_name", "created_at"]
+    ordering = ["-created_at"]
+    permission_classes = [IsAdmin]
+
+    def get_serializer(self, *args, **kwargs):
+        if self.action == "create":
+            return UserRegistrationSerializer(*args, **kwargs)
+        return super().get_serializer(*args,**kwargs)
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+    
+class UserLogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            tokens = OutstandingToken.objects.filter(user=request.user)
+            for token in tokens:
+                BlacklistedToken.objects.get_or_create(token=token)
+            return Response({
+                'message': 'Logged out from all devices. All tokens invalidated.'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
