@@ -8,7 +8,7 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import User
 
-class UserRegisterSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8, required=True, validators=[validate_password])
     password_confirm = serializers.CharField(write_only=True, min_length=8, required=True)
     company_name = serializers.CharField(write_only=True, required=False)
@@ -84,7 +84,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             from apps.companies.models import Company
             Company.objects.create(
                 name=company_name,
-                owner=user,
                 description=f"Company created by {user.get_full_name()}"
             )
         
@@ -143,3 +142,10 @@ class EmailTokenObtainSerializer(serializers.Serializer):
 class VerifyEmailSerializer(serializers.Serializer):
     """Empty serializer for VerifyEmailView - just to satisfy DRF schema generation"""
     pass
+class UserProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'role')
+
