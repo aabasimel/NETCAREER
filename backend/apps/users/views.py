@@ -227,14 +227,14 @@ class UserViewSet(viewsets.ModelViewSet):
         user.save()
         return Response({"message": "User verified successfully"}, status=status.HTTP_200_OK)
     @action(detail=False, methods=['get'], permission_classes=[IsAdmin])
-    def recruiters(self, request):
-        employers = User.objects.filter(role="recruiter")
+    def employers(self, request):
+        employers = User.objects.filter(role="employer")
         serializer = UserSerializer(employers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'], permission_classes=[IsAdmin])
     def jobseekers(self, request):
-        jobseekers = User.objects.filter(role="candidate")
+        jobseekers = User.objects.filter(role="jobseeker")
         serializer = UserSerializer(jobseekers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
