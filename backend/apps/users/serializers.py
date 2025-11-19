@@ -149,3 +149,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name', 'role')
 
+class UpdateRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fieds = ('role',)
+    def validate(self, attrs):
+        user = self.context['request'].user
+        if not user.is_admin():
+            raise serializers.ValidationError('Only admin users can update role')
+        return attrs
