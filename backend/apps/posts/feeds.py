@@ -13,7 +13,7 @@ class FeedGenerator:
         feed_posts = Post.objects.filter(
             Q(author__in=connections) |
             Q(content_type='job', company__followers=user) |
-            Q(author=user)  # Include user's own posts
+            Q(author=user)  
         ).filter(
             is_published=True
         ).select_related(
