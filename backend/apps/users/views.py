@@ -11,7 +11,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.exceptions import TokenError
-from .serializers import EmailTokenObtainSerializer, UserRegistrationSerializer, UserLoginSerializer, UserSerializer,VerifyEmailSerializer
+from .serializers import EmailTokenObtainSerializer, UserRegistrationSerializer, UserLoginSerializer, UserSerializer,VerifyEmailSerializer,UpdateRoleSerializer
 from .utils import generate_email_token
 from .tasks import send_email_verification
 import jwt
@@ -211,6 +211,33 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == "create":
             return UserRegistrationSerializer(*args, **kwargs)
         return super().get_serializer(*args,**kwargs)
+    @action(detail=True, methods=['patch'], permission_classes=[IsAdmin]) 
+    def change_role(self, request, pk=None):
+        user = self.get_object()
+        serlializer = UpdateRoleSerializer(user, data=request.data, partial=True, context={'request': request})
+        serlializer.is_valid(raise_exception=True)
+        serlializer.save()
+        return Response(serlializer.data, status=status.HTTP_200_OK)
+    
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAdmin])
+    def verify_user(self, request, pk=None):
+        user = self.get_object()
+        user.is_verified = True
+        user.save()
+        return Response({"message": "User verified successfully"}, status=status.HTTP_200_OK)
+    @action(detail=False, methods=['get'], permission_classes=[IsAdmin])
+    def recruiters(self, request):
+        employers = User.objects.filter(role="recruiter")
+        serializer = UserSerializer(employers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'], permission_classes=[IsAdmin])
+    def jobseekers(self, request):
+        jobseekers = User.objects.filter(role="candidate")
+        serializer = UserSerializer(jobseekers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class UserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
