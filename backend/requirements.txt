@@ -19,3 +19,6 @@ djangorestframework-simplejwt
 drf-yasg
 drf-yasg
 dj-database-url
+pillow
+django-redis
+environ
