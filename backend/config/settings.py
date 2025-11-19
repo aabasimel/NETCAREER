@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'rest_framework_simplejwt',
     'drf_spectacular',
+    'rest_framework_simplejwt.token_blacklist',
 
 
 ]
@@ -169,6 +170,8 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'ALX Travel API',
     'DESCRIPTION': 'API documentation for ALX Travel App',
     'VERSION': '1.0.0',
+    
+
 }
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
@@ -191,10 +194,9 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
 
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',    
     'PAGE_SIZE': 20,
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
+    
     
 }
 
@@ -216,5 +218,8 @@ from datetime import timedelta
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'user_id',  
     'USER_ID_CLAIM': 'user_id',
+    'BLACKLIST_AFTER_ROTATION': True,    
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     
 }
