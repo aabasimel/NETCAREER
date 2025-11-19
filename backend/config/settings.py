@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_spectacular',
     'rest_framework_simplejwt.token_blacklist',
+    'rest_framework',
 
 
 ]
@@ -167,8 +168,8 @@ CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:6379/1'
 
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'ALX Travel API',
-    'DESCRIPTION': 'API documentation for ALX Travel App',
+    'TITLE': 'NetCareer',
+    'DESCRIPTION': 'API documentation for NetCareer',
     'VERSION': '1.0.0',
     
 
