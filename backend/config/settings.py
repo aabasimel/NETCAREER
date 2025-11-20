@@ -171,6 +171,7 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'NetCareer',
     'DESCRIPTION': 'API documentation for NetCareer',
     'VERSION': '1.0.0',
+    'COMPONENT_SPLIT_REQUEST': True,
     
 
 }
