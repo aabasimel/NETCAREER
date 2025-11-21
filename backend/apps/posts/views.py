@@ -106,7 +106,6 @@ class PostViewSet(viewsets.ModelViewSet):
                 notification_type='post_like',
                 actor=user,
                 target_content_type='post',
-                target_object_id=post.post_id,
                 message=f"{user.first_name} liked your post"
             )
 
@@ -118,7 +117,6 @@ class PostViewSet(viewsets.ModelViewSet):
                 notification_type='post_comment',
                 actor=user,
                 target_content_type='post',
-                target_object_id=post.post_id,
                 message=f"{user.first_name} commented on your post"
             )
 
