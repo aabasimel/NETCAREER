@@ -151,7 +151,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UpdateRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fieds = ('role',)
+        fields = ('role',)
     def validate(self, attrs):
         user = self.context['request'].user
         if not user.is_admin():
