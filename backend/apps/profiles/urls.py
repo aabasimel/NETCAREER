@@ -1,9 +1,14 @@
 # profiles/urls.py
 from django.urls import path
 
-from .views import (EducationDetailView, EducationListCreateView,
-                    ExperienceDetailView, ExperienceListCreateView,
-                    MyProfileView, ProfileDetailView)
+from .views import (
+    EducationDetailView,
+    EducationListCreateView,
+    ExperienceDetailView,
+    ExperienceListCreateView,
+    MyProfileView,
+    ProfileDetailView,
+)
 
 app_name = "profiles"
 
