@@ -2,9 +2,9 @@ name: Netcareer CI/CD
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main ]
 
 env:
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/netcareer_db
