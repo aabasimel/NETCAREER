@@ -6,3 +6,4 @@ resumes/
 *.sql
 __pycache__/
 *.pyc
+*.sql
