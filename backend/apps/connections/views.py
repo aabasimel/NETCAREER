@@ -8,11 +8,8 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 
 from .models import Connection, Follow
-from .serializers import (
-    ConnectionCreateSerializer,
-    ConnectionSerializer,
-    FollowSerializer,
-)
+from .serializers import (ConnectionCreateSerializer, ConnectionSerializer,
+                          FollowSerializer)
 
 
 class ConnectionViewSet(viewsets.ModelViewSet):

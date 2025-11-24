@@ -7,12 +7,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Notification
-from .serializers import (
-    NotificationCountSerializer,
-    NotificationPreferencesSerializer,
-    NotificationSerializer,
-    NotificationUpdateSerializer,
-)
+from .serializers import (NotificationCountSerializer,
+                          NotificationPreferencesSerializer,
+                          NotificationSerializer, NotificationUpdateSerializer)
 
 
 class NotificationViewSet(viewsets.ModelViewSet):
