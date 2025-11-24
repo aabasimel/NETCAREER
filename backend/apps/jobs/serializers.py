@@ -1,8 +1,9 @@
-from rest_framework import serializers
-from .models import Job, JobApplication
-from apps.users.serializers import UserProfileSerializer
-from apps.companies.serializers import CompanySerializer
 from apps.companies.models import Company
+from apps.companies.serializers import CompanySerializer
+from apps.users.serializers import UserProfileSerializer
+from rest_framework import serializers
+
+from .models import Job, JobApplication
 
 
 class JobSerializer(serializers.ModelSerializer):

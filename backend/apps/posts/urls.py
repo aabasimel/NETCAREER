@@ -1,9 +1,10 @@
 # backend/apps/posts/urls.py
 
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested.routers import NestedDefaultRouter
-from .views import PostViewSet, CommentViewSet
+
+from .views import CommentViewSet, PostViewSet
 
 # Main router for posts
 router = DefaultRouter()

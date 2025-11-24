@@ -1,18 +1,20 @@
-from django.shortcuts import render
-from rest_framework import viewsets, status,generics,permissions,parsers
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from django.db.models import Q, F
-from django.shortcuts import get_object_or_404
-from .models import Post, Like, Comment
-from .serializers import PostSerializer, LikeSerializer, CommentSerializer, PostCreateSerializer
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import PageNumberPagination
-from apps.users.serializers import UserProfileSerializer
-from rest_framework.views import APIView
-from .feeds import FeedGenerator
-from apps.users.permissions import IsOwnerOrReadOnly
 from apps.connections.models import Connection
+from apps.users.permissions import IsOwnerOrReadOnly
+from apps.users.serializers import UserProfileSerializer
+from django.db.models import F, Q
+from django.shortcuts import get_object_or_404, render
+from rest_framework import generics, parsers, permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .feeds import FeedGenerator
+from .models import Comment, Like, Post
+from .serializers import (CommentSerializer, LikeSerializer,
+                          PostCreateSerializer, PostSerializer)
+
 
 class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]

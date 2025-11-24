@@ -1,5 +1,5 @@
-from rest_framework import permissions
 from apps.connections.models import Connection
+from rest_framework import permissions
 
 
 class IsAdmin(permissions.BasePermission):

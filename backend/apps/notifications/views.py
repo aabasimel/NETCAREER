@@ -1,16 +1,15 @@
-from rest_framework import viewsets, status, permissions
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from datetime import timedelta
+
 from django.db.models import Q
 from django.utils import timezone
-from datetime import timedelta
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from .models import Notification
-from .serializers import (
-    NotificationSerializer,
-    NotificationUpdateSerializer,
-    NotificationCountSerializer,
-    NotificationPreferencesSerializer,
-)
+from .serializers import (NotificationCountSerializer,
+                          NotificationPreferencesSerializer,
+                          NotificationSerializer, NotificationUpdateSerializer)
 
 
 class NotificationViewSet(viewsets.ModelViewSet):

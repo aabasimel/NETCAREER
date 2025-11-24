@@ -1,16 +1,13 @@
-from rest_framework import viewsets, status, permissions, filters, parsers
+from apps.users.permissions import IsEmployer, IsOwnerOrReadOnly
+from django.db.models import Count, Q
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, parsers, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Q, Count
+
 from .models import Company
-from .serializers import (
-    CompanySerializer,
-    CompanyCreateSerializer,
-    CompanyUpdateSerializer,
-    CompanyStatsSerializer,
-)
-from apps.users.permissions import IsOwnerOrReadOnly, IsEmployer
+from .serializers import (CompanyCreateSerializer, CompanySerializer,
+                          CompanyStatsSerializer, CompanyUpdateSerializer)
 
 
 class CompanyViewSet(viewsets.ModelViewSet):

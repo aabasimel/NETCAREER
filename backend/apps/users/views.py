@@ -1,43 +1,31 @@
+from urllib.parse import unquote
+
+import jwt
+from django.conf import settings
 from django.shortcuts import render
-from rest_framework import viewsets, status, generics
+from django_filters.rest_framework import DjangoFilterBackend, OrderingFilter
+from rest_framework import generics, status, viewsets
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from .models import User
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.token_blacklist.models import (BlacklistedToken,
+                                                             OutstandingToken)
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
-from rest_framework_simplejwt.exceptions import TokenError
-from .serializers import (
-    EmailTokenObtainSerializer,
-    UserRegistrationSerializer,
-    UserLoginSerializer,
-    UserSerializer,
-    VerifyEmailSerializer,
-    UpdateRoleSerializer,
-)
-from .utils import generate_email_token
-from .tasks import send_email_verification
-import jwt
-from urllib.parse import unquote
-from django.conf import settings
-from rest_framework.generics import GenericAPIView
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import AllowAny
+
 from .models import User
-from rest_framework.renderers import JSONRenderer
-from rest_framework.decorators import api_view, permission_classes
 from .permissions import IsAdmin, IsEmployer, IsJobSeeker
-from django_filters.rest_framework import DjangoFilterBackend, OrderingFilter
-from rest_framework_simplejwt.token_blacklist.models import (
-    BlacklistedToken,
-    OutstandingToken,
-)
+from .serializers import (EmailTokenObtainSerializer, UpdateRoleSerializer,
+                          UserLoginSerializer, UserRegistrationSerializer,
+                          UserSerializer, VerifyEmailSerializer)
+from .tasks import send_email_verification
+from .utils import generate_email_token
 
 
 class UserRegistrationView(GenericAPIView):

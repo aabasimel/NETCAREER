@@ -1,6 +1,8 @@
-from rest_framework import serializers
-from .models import Post, Like, Comment
 from apps.users.serializers import UserProfileSerializer
+from rest_framework import serializers
+
+from .models import Comment, Like, Post
+
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserProfileSerializer(read_only=True)

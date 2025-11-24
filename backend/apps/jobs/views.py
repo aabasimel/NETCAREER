@@ -1,18 +1,16 @@
-from rest_framework import viewsets, status, permissions, filters, parsers
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Q
-from .models import Job, JobApplication
-from .serializers import (
-    JobSerializer,
-    JobApplicationSerializer,
-    JobApplicationCreateSerializer,
-    JobCreateSerializer,
-    JobApplicationApplySerializer,
-)
-from .search import JobSearch
 from apps.users.permissions import IsOwnerOrReadOnly
+from django.db.models import Q
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, parsers, permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from .models import Job, JobApplication
+from .search import JobSearch
+from .serializers import (JobApplicationApplySerializer,
+                          JobApplicationCreateSerializer,
+                          JobApplicationSerializer, JobCreateSerializer,
+                          JobSerializer)
 
 
 class JobViewSet(viewsets.ModelViewSet):

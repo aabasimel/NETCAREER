@@ -1,6 +1,7 @@
-from rest_framework import serializers
-from .models import Profile, Education, Experience
 from apps.users.serializers import UserProfileSerializer
+from rest_framework import serializers
+
+from .models import Education, Experience, Profile
 
 
 class ExperienceSerializer(serializers.ModelSerializer):

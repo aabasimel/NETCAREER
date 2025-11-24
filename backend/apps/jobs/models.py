@@ -1,7 +1,8 @@
-from django.db import models
+import uuid
+
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
-import uuid
+from django.db import models
 
 
 class Job(models.Model):

@@ -1,19 +1,15 @@
-from rest_framework import status, viewsets, permissions
-from .models import Connection, Follow
-from rest_framework.decorators import api_view, permission_classes, action
-from rest_framework.response import Response
-from django.db.models import Q, F
-from .serializers import (
-    ConnectionSerializer,
-    FollowSerializer,
-    ConnectionCreateSerializer,
-)
-
-from apps.users.models import User
 from apps.notifications.models import Notification
 from apps.profiles.models import Profile
+from apps.users.models import User
 from apps.users.serializers import UserProfileSerializer
-from apps.profiles.models import Profile
+from django.db.models import F, Q
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.response import Response
+
+from .models import Connection, Follow
+from .serializers import (ConnectionCreateSerializer, ConnectionSerializer,
+                          FollowSerializer)
 
 
 class ConnectionViewSet(viewsets.ModelViewSet):

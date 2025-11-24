@@ -1,6 +1,7 @@
-from rest_framework import serializers
-from .models import Connection, Follow
 from apps.users.serializers import UserProfileSerializer
+from rest_framework import serializers
+
+from .models import Connection, Follow
 
 
 class ConnectionSerializer(serializers.ModelSerializer):

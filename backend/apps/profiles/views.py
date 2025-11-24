@@ -1,18 +1,13 @@
-from rest_framework import generics, status, permissions
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from django.db.models import Q, F
-from .models import Profile
-from .serializers import (
-    ProfileSerializer,
-    ProfileUpdateSerializer,
-    EducationSerializer,
-    ExperienceSerializer,
-)
-from .models import Education, Experience, Profile
-from rest_framework.pagination import PageNumberPagination
 from apps.users.permissions import IsOwnerOrReadOnly
-from rest_framework import serializers
+from django.db.models import F, Q
+from rest_framework import generics, permissions, serializers, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+
+from .models import Education, Experience, Profile
+from .serializers import (EducationSerializer, ExperienceSerializer,
+                          ProfileSerializer, ProfileUpdateSerializer)
 
 
 class ProfileDetailView(generics.RetrieveAPIView):

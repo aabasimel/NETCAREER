@@ -1,5 +1,8 @@
-from django.db import models
 import uuid
+
+from django.db import models
+
+
 class Post(models.Model):
     post_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     CONTENT_TYPE_CHOICES = (
