@@ -114,18 +114,33 @@ class JobViewSet(viewsets.ModelViewSet):
     def recommendations(self, request):
         """Get job recommendations based on user profile"""
         user = request.user
-        profile = user.profile
         
-        # Simple recommendation logic based on skills and location
-        recommended_jobs = Job.objects.filter(
-            is_active=True,
-            location__icontains=profile.location
-        ).filter(
-            Q(skills_required__icontains=skill) for skill in profile.skills.split(',')[:3]
-        )[:10]
+        if not hasattr(user, 'profile'):
+            return Response(
+                {"error": "User profile not found. Please complete your profile to get job recommendations."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        profile = user.profile
+
+        
+        recommended_jobs = Job.objects.filter(is_active=True)
+        
+        if profile.location:
+            recommended_jobs = recommended_jobs.filter(location__icontains=profile.location)
+        
+        if profile.skills:
+            skills_list = [skill.strip() for skill in profile.skills.split(',')[:3]]
+            skills_query = Q()
+            for skill in skills_list:
+                skills_query |= Q(skills_required__icontains=skill)
+            recommended_jobs = recommended_jobs.filter(skills_query)
+        
+        recommended_jobs = recommended_jobs[:10]
         
         serializer = self.get_serializer(recommended_jobs, many=True)
         return Response(serializer.data)
+
 
 class JobApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = JobApplicationSerializer
