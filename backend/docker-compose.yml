@@ -1,0 +1,66 @@
+
+
+services:
+  db:
+    image: postgres:14
+    container_name: postgresql
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 2s
+      retries: 10
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: product-order:v1
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    command: bash -c "chmod +x /app/migrate.sh && /app/migrate.sh && chmod +x /app/entrypoint.sh && /app/entrypoint.sh"
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - ./.env
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_worker1
+    command: bash -c "chmod +x /app/migrate-celery.sh && /app/migrate-celery.sh && /opt/venv/bin/celery -A product_order_api worker --loglevel=info"
+
+    depends_on:
+      - web
+      - redis
+    environment:
+        - DEBUG=1
+        - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+        - CELERY_BROKER=redis://redis:6379/1
+        - CELERY_BACKEND=redis://redis:6379/1
+        
+    volumes:
+      - .:/app
+
+volumes:
+  db_data:
+  redis_data:
