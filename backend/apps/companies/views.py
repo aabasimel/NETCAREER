@@ -6,12 +6,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Company
-from .serializers import (
-    CompanyCreateSerializer,
-    CompanySerializer,
-    CompanyStatsSerializer,
-    CompanyUpdateSerializer,
-)
+from .serializers import (CompanyCreateSerializer, CompanySerializer,
+                          CompanyStatsSerializer, CompanyUpdateSerializer)
 
 
 class CompanyViewSet(viewsets.ModelViewSet):
