@@ -1,5 +1,7 @@
 from django.db import models
 import uuid
+from django.conf import settings
+
 
 class Company(models.Model):
 
@@ -21,8 +23,15 @@ class Company(models.Model):
     industry = models.CharField(max_length=255)
     company_size = models.CharField(max_length=20, choices=COMPANY_SIZE_CHOICES)
     founded_year = models.IntegerField()
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='companies',
+        null=True,
+        blank=True
+    )
 
-    headquarters = models.CharField(max_length=255)
+    headquarters = models.CharField(max_length=255) 
 
     specialities = models.TextField()  
     
