@@ -7,10 +7,13 @@ from rest_framework.response import Response
 
 from .models import Job, JobApplication
 from .search import JobSearch
-from .serializers import (JobApplicationApplySerializer,
-                          JobApplicationCreateSerializer,
-                          JobApplicationSerializer, JobCreateSerializer,
-                          JobSerializer)
+from .serializers import (
+    JobApplicationApplySerializer,
+    JobApplicationCreateSerializer,
+    JobApplicationSerializer,
+    JobCreateSerializer,
+    JobSerializer,
+)
 
 
 class JobViewSet(viewsets.ModelViewSet):
