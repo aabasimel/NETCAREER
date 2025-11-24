@@ -78,14 +78,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         
-        # Create company if employer
-        if user.role == 'employer' and company_name:
-            from apps.companies.models import Company
-            Company.objects.create(
-                name=company_name,
-                description=f"Company created by {user.get_full_name()}"
-            )
-        
         return user
 class UserLoginSerializer(serializers.Serializer):
     """serializer for user login"""
