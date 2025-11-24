@@ -4,3 +4,5 @@ posts/
 resumes/
 *.sql
 *.sql
+__pycache__/
+*.pyc
