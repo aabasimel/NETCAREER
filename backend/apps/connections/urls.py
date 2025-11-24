@@ -4,9 +4,9 @@ from .views import ConnectionViewSet, FollowViewSet
 
 router = DefaultRouter()
 
-router.register(r'connections', ConnectionViewSet, basename='connections')
-router.register(r'follows', FollowViewSet, basename='follows')
+router.register(r"connections", ConnectionViewSet, basename="connections")
+router.register(r"follows", FollowViewSet, basename="follows")
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]

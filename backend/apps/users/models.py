@@ -1,4 +1,3 @@
-
 import uuid
 from decimal import Decimal
 from django.db import models
@@ -9,6 +8,7 @@ from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone as datimezone
+
 
 class CustomUserManager(BaseUserManager):
     """Custom manager for User model using email instead of username."""
@@ -40,10 +40,12 @@ class User(AbstractUser):
     ROLE_CHOICES = [
         ("jobseeker", "Jobseeker"),
         ("employer", "Employer"),
-        ("admin", "Admin"),       
+        ("admin", "Admin"),
     ]
 
-    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    user_id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=255, unique=True)
@@ -51,7 +53,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="jobseeker")
     admin_requested = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
-    
+
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -60,7 +62,6 @@ class User(AbstractUser):
     is_staff = models.BooleanField(default=False)
 
     is_superuser = models.BooleanField(default=False)
-
 
     username = None
     USERNAME_FIELD = "email"
@@ -82,7 +83,6 @@ class User(AbstractUser):
 
     def get_short_name(self):
         return self.first_name
-
 
     def is_jobseeker(self):
         return self.role == "jobseeker"
