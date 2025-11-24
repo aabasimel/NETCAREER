@@ -21,7 +21,7 @@ class Post(models.Model):
     content = models.TextField()
     image = models.ImageField(upload_to='posts/images/', blank=True, null=True)
     video = models.FileField(upload_to='posts/videos/', blank=True, null=True)
-    link = models.URLField(blank=True)
+    link = models.URLField(blank=True, null=True)
     link_preview = models.JSONField(blank=True, null=True)  
     
     visibility = models.CharField(max_length=20, choices=VISIBILITY_CHOICES, default='public')

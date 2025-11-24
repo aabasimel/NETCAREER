@@ -6,24 +6,24 @@ class CommentSerializer(serializers.ModelSerializer):
     user = UserProfileSerializer(read_only=True)
     replies = serializers.SerializerMethodField()
     can_edit = serializers.SerializerMethodField()
+
     class Meta:
         model = Comment
-        fields = 'comment_id', 'user', 'post', 'parent_comment', 'content', 'like_count','replies','can_edit', 'created_at', 'updated_at'
-    
+        fields = ('comment_id', 'user', 'content', 'like_count',  
+                 'replies', 'can_edit', 'created_at', 'updated_at')
+        read_only_fields = ('comment_id', 'user', 'like_count', 'created_at', 'updated_at')
+
     def get_replies(self, obj):
-        # Check if the replies have already been prefetched
         if hasattr(obj, 'replies_prefetched'):
             replies = obj.replies_prefetched
         else:
             replies = obj.replies.all()
-        
-        return CommentSerializer(replies, many=True).data
+        return CommentSerializer(replies, many=True, context=self.context).data
 
     def get_can_edit(self, obj):
-        request = obj.user == self.context['request']
+        request = self.context.get('request')
         return request and request.user == obj.user
-    
-     
+
 class LikeSerializer(serializers.ModelSerializer):
     user = UserProfileSerializer(read_only=True)
     class Meta:
@@ -49,7 +49,7 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = ('post_id', 'author', 'like_count', 'comment_count', 
                           'share_count', 'created_at', 'updated_at')
         
-    def get_hast_liked(self,obj):
+    def get_has_liked(self,obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             return obj.likes.filter( user=request.user).exists()

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status,generics,permissions
+from rest_framework import viewsets, status,generics,permissions,parsers
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db.models import Q, F
@@ -12,9 +12,12 @@ from apps.users.serializers import UserProfileSerializer
 from rest_framework.views import APIView
 from .feeds import FeedGenerator
 from apps.users.permissions import IsOwnerOrReadOnly
+from apps.connections.models import Connection
 
 class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    parser_classes = [parsers.MultiPartParser, parsers.JSONParser, parsers.FormParser]
+
 
 
     def get_queryset(self):
@@ -23,17 +26,34 @@ class PostViewSet(viewsets.ModelViewSet):
                                                                          ).order_by('-created_at')
         if self.action == 'list':
             user = self.request.user
+            
+            # Get user's connections
+            user_connections = Connection.objects.filter(
+                Q(from_user=user) | Q(to_user=user), 
+                status='accepted'
+            ).values_list('to_user_id', 'from_user_id')
+
+            my_connections_ids = set()
+
+            for to_user_id, from_user_id in user_connections:
+                my_connections_ids.add(from_user_id)
+                my_connections_ids.add(to_user_id)
+
+            my_connections_ids.discard(user.user_id)
+            
+            # Filter posts based on visibility and connections
             queryset = queryset.filter(
                 Q(visibility='public') |
-                Q(visibility='public', author__in = user.connections.all())|
+                Q(visibility='connections', author_id__in=my_connections_ids) |
                 Q(author=user)
-
-            )     
+            )    
         return queryset
 
     def get_serializer_class(self):
         if self.action == 'create':
             return PostCreateSerializer
+        elif self.action == 'comment':
+            return CommentSerializer
         return PostSerializer
         
     def perform_create(self,serializer):
@@ -49,15 +69,15 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response({'posts':serializer.data, 'count': len(feed_posts)}, status=status.HTTP_200_OK)
     
 
-    @action(detail=True,methods=['post'])
+    @action(detail=True,methods=['post'],permission_classes=[IsAuthenticated])
     def like(self,request,pk=None):
         post = self.get_object()
-        like,created = Liked.objects.get_or_create(user=request.user, post=post)
+        like,created = Like.objects.get_or_create(user=request.user, post=post)
         if created:
-            post.like_ount = F('like_count') + 1
+            post.like_count = F('like_count') + 1
             post.save()
             post.refresh_from_db()
-            self._create_like_notification(request.user, request.user)     
+            self._create_like_notification(request.user, post=post)     
         serializer = LikeSerializer(like)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
@@ -76,23 +96,28 @@ class PostViewSet(viewsets.ModelViewSet):
     def comments(self,reqest, pk = None):
         post = self.get_object()
         comments = post.comments.filter(parent_comment__isnull=True).select_related('user').order_by('-created_at')
-        serializer= CommentSerializer(comments, many = True, context={'request': reqest})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        comment_data =[{
+            "name": comment.user.first_name,
+            "comment": comment.content
+        }
+        for comment in comments
+        ] 
+        return Response(comment_data, status=status.HTTP_200_OK)
     
 
-    @action(detail = True, methods= ['post'])
+    @action(detail = True, methods= ['post'],permission_classes=[IsAuthenticated])
     def comment(self,request, pk = None):
         post = self.get_object()
+        
+
         serializer = CommentSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             comment = serializer.save(user=request.user, post=post)
             
-            # Update comment count
             post.comment_count = F('comment_count') + 1
             post.save()
             post.refresh_from_db()
             
-            # Create notification
             self._create_comment_notification(request.user, post, comment)
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
