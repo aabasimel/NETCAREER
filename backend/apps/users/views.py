@@ -14,16 +14,23 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.token_blacklist.models import (BlacklistedToken,
-                                                             OutstandingToken)
+from rest_framework_simplejwt.token_blacklist.models import (
+    BlacklistedToken,
+    OutstandingToken,
+)
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User
 from .permissions import IsAdmin, IsEmployer, IsJobSeeker
-from .serializers import (EmailTokenObtainSerializer, UpdateRoleSerializer,
-                          UserLoginSerializer, UserRegistrationSerializer,
-                          UserSerializer, VerifyEmailSerializer)
+from .serializers import (
+    EmailTokenObtainSerializer,
+    UpdateRoleSerializer,
+    UserLoginSerializer,
+    UserRegistrationSerializer,
+    UserSerializer,
+    VerifyEmailSerializer,
+)
 from .tasks import send_email_verification
 from .utils import generate_email_token
 

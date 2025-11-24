@@ -6,8 +6,12 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from .models import Education, Experience, Profile
-from .serializers import (EducationSerializer, ExperienceSerializer,
-                          ProfileSerializer, ProfileUpdateSerializer)
+from .serializers import (
+    EducationSerializer,
+    ExperienceSerializer,
+    ProfileSerializer,
+    ProfileUpdateSerializer,
+)
 
 
 class ProfileDetailView(generics.RetrieveAPIView):
