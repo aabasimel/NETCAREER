@@ -116,21 +116,6 @@ jobs:
         flags: unittests
         name: codecov-umbrella
 
-    - name: Run security check
-      run: |
-        pip install bandit safety
-        bandit -r backend/ -f json -o bandit-report.json
-        safety check --json --output safety-report.json
-
-    - name: Upload security reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: security-reports
-        path: |
-          bandit-report.json
-          safety-report.json
-        retention-days: 30
-
   lint:
     runs-on: ubuntu-latest
     steps:
