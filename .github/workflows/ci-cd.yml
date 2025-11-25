@@ -42,7 +42,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]  # Fixed Python versions
+        python-version: ["3.9", "3.10", "3.11"]  
 
     steps:
     - name: Checkout code
@@ -76,7 +76,7 @@ jobs:
         cd backend
         python manage.py migrate
       env:
-        DJANGO_SETTINGS_MODULE: config.settings.testing
+        DJANGO_SETTINGS_MODULE: config.settings
 
     - name: Run tests with coverage
       run: |
