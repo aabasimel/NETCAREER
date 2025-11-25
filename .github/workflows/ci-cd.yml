@@ -19,9 +19,9 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: netcareer_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres  
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -77,13 +77,24 @@ jobs:
         python manage.py migrate
       env:
         DJANGO_SETTINGS_MODULE: config.settings
-
+        DATABASE_HOST: localhost
+        DATABASE_PORT: 5432
+        DATABASE_NAME: netcareer_db
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: postgres  
     - name: Run tests with coverage
       run: |
         cd backend
         coverage run --source='.' manage.py test
         coverage xml
         coverage report
+      env:
+        DJANGO_SETTINGS_MODULE: config.settings
+        DATABASE_HOST: localhost
+        DATABASE_PORT: 5432
+        DATABASE_NAME: netcareer_db
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: postgres  
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
@@ -116,7 +127,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.11"  # Fixed Python version
+        python-version: "3.11"
 
     - name: Install dependencies
       run: |
