@@ -157,10 +157,13 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
+print(f"REDIS_URL: {REDIS_URL}")
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",  # use the container name 'redis'
+        "LOCATION": REDIS_URL,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -168,8 +171,8 @@ CACHES = {
 }
 
 REDIS_HOST = os.getenv("REDIS_HOST", "redis")
-CELERY_BROKER_URL = f"redis://{REDIS_HOST}:6379/1"
-CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:6379/1"
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
 
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
