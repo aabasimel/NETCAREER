@@ -47,7 +47,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: celery_worker1
-    command: bash -c "chmod +x /app/migrate-celery.sh && /app/migrate-celery.sh && /opt/venv/bin/celery -A product_order_api worker --loglevel=info"
+    command: bash -c "chmod +x /app/migrate-celery.sh && /app/migrate-celery.sh && /opt/venv/bin/celery -A config worker --loglevel=info"
 
     depends_on:
       - web
