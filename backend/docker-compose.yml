@@ -29,7 +29,7 @@ services:
       - "8080:8080"
     command: bash -c "chmod +x /app/migrate.sh && /app/migrate.sh && chmod +x /app/entrypoint.sh && /app/entrypoint.sh"
     depends_on:
-      - db
+      # - db
       - redis
     env_file:
       - ./.env
@@ -62,5 +62,4 @@ services:
       - .:/app
 
 volumes:
-  db_data:
   redis_data:
