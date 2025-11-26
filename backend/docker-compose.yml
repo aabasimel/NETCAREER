@@ -19,7 +19,7 @@ services:
 
   web:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     image: product-order:v1
     restart: always
