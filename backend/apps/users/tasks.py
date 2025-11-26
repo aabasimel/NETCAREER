@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 logger = logging.Logger(__name__)
 
 
-@shared_task
+# @shared_task
 def send_email_verification(email, link):
     try:
         subject = "Email verification"

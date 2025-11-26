@@ -57,7 +57,7 @@ class UserRegistrationView(GenericAPIView):
                 # Resend verification email for unverified user
                 token = generate_email_token(user)
                 link = f"http://localhost:8080/auth/verify-email/?token={token}"
-                send_email_verification.delay(email, link)
+                send_email_verification(email, link)
                 return Response(
                     {"message": "Verification email sent to existing unverified user"},
                     status=status.HTTP_200_OK,
@@ -69,7 +69,7 @@ class UserRegistrationView(GenericAPIView):
         # Send verification email
         token = generate_email_token(user)
         link = f"http://localhost:8080/auth/verify-email/?token={token}"
-        send_email_verification.delay(email, link)
+        send_email_verification(email, link)
 
         return Response(
             {
@@ -118,50 +118,6 @@ class VerifyEmailView(APIView):
             return Response({"error": "User not found"}, status=404)
 
 
-# class UserLoginView(GenericAPIView):
-#     serializer_class = UserLoginSerializer
-#     permission_classes = [AllowAny]
-
-#     def post(self, request):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-
-#         email = serializer.validated_data['email']
-#         password = serializer.validated_data['password']
-
-#         # Authenticate user
-#         user = authenticate(request, email=email, password=password)
-
-#         if user is None:
-#             # Try to find user and check password manually
-#             try:
-#                 user = User.objects.get(email=email)
-#                 if not user.check_password(password):
-#                     user = None
-#             except User.DoesNotExist:
-#                 user = None
-
-#         if user is None:
-#             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
-#         if not user.is_verified:
-#             return Response({'error': 'User not verified'}, status=status.HTTP_401_UNAUTHORIZED)
-
-#         refresh = RefreshToken.for_user(user)
-#         access = refresh.access_token
-
-
-#         return Response({
-#             "access": str(access),
-#             "refresh": str(refresh),
-#             "user": {
-#                 "user_id": user.user_id,
-#                 "email": user.email,
-#                 "first_name": user.first_name,
-#                 "last_name": user.last_name,
-#                 "role": user.role
-#             }
-#         }, status=status.HTTP_200_OK)
 class UserLoginView(GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = UserLoginSerializer
