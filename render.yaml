@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: netcareer-web
+    env: docker
+    docker:
+      dockerfile: ./backend/Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: netcareer-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: netcareer-redis
+          type: redis
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+
+  - type: worker
+    name: netcareer-celery-worker
+    env: docker
+    docker:
+      dockerfile: ./backend/Dockerfile
+    command: celery -A config worker --loglevel=info
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: netcareer-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: netcareer-redis
+          type: redis
+          property: connectionString
+      - key: SECRET_KEY
+        fromService:
+          name: netcareer-web
+          type: web
+          property: envVar.SECRET_KEY
+
+  - type: redis
+    name: netcareer-redis
+    plan: free
+    ipAllowList: []
+
+  - type: pserv
+    name: netcareer-db
+    plan: free
+    databaseName: netcareer
+    user: netcareer_user
