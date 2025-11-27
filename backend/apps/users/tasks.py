@@ -6,20 +6,22 @@ from django.core.mail import send_mail
 
 logger = logging.Logger(__name__)
 
+resend.api_key = settings.RESEND_API_KEY
 
 @shared_task
 def send_email_verification(email, link):
     try:
-        subject = "Email verification"
-        message = f"Please click on the link to verify your email: {link}"
+        params = {
+        "from": "NetCareer <onboarding@resend.dev>",
+        "to": [email],
+        "subject": "Email verification",
+        "html": f'<p>Click to verify: <a href="{link}">{link}</a></p>'
+        }
+        
+        resend.Emails.send(params)
 
-        send_mail(
-            subject=subject,
-            message=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            fail_silently=False,
-        )
+
+
         return f"Verification email sent to {email}"
     except Exception as e:
         logger.error(f"Error sending verification email to {email}: {e}")

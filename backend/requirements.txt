@@ -24,3 +24,4 @@ django-redis
 environ
 drf-nested-routers
 django-extensions
+resend
