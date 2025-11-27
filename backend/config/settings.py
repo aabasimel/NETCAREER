@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework",
+
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -70,6 +71,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -159,7 +161,8 @@ AUTH_USER_MODEL = "users.User"
 AUTHENTICATION_BACKENDS = [
     "apps.users.backends.EmailTokenAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
+    'allauth.account.auth_backends.AuthenticationBackend',
+
 ]
 
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/1")
@@ -242,23 +245,30 @@ SIMPLE_JWT = {
 
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  
+ACCOUNT_UNIQUE_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = {
-    "google": {
-        "APP": {
-            "client_id": "1095001471410-lge512as6lmorqt33cpm70lbcg5hnj8q.apps.googleusercontent.com",
-            "secret": "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",
-            "key": "",
+    'google': {
+        'APP': {
+            'client_id': '1095001471410-lge512as6lmorqt33cpm70lbcg5hnj8q.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
         },
-        "SCOPE": [
-            "profile",
-            "email",
+        'SCOPE': [
+            'profile',
+            'email',
         ],
-        "AUTH_PARAMS": {
-            "access_type": "online",
-        },
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
     }
 }
-GOOGLE_OAUTH2_CLIENT_ID = (
-    "1095001471410-lge512as6lmorqt33cpm70lbcg5hmj8q.apps.googleusercontent.com"
-)
-GOOGLE_OAUTH2_CLIENT_SECRET = "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"
+GOOGLE_OAUTH2_CLIENT_ID = '1095001471410-lge512as6lmorqt33cpm70lbcg5hmj8q.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = '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'
+
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
