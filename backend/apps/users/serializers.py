@@ -32,9 +32,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             "company_name",
         ]
         read_only_fields = ["user_id", "created_at", "updated_at", "is_verified"]
-        extra_kwargs = {
-            "email": {"validators": []}  
-        }
+        extra_kwargs = {"email": {"validators": []}}
 
     def validate_email(self, value):
         """
@@ -81,7 +79,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         password = validated_data.pop("password")
 
-        validate_password['is_verified'] = True
+        validate_password["is_verified"] = True
         # Check if unverified user already exists
         email = validated_data["email"]
         existing_user = User.objects.filter(email=email, is_verified=False).first()

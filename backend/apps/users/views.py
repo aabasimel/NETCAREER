@@ -81,10 +81,12 @@ from .utils import generate_email_token
 #             status=status.HTTP_201_CREATED,
 #         )
 
+
 class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
-    permission_classes=[permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
+
 
 class VerifyEmailView(APIView):
     serilaizer_class = VerifyEmailSerializer
