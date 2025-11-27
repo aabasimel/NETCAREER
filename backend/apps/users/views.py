@@ -57,7 +57,7 @@ class UserRegistrationView(GenericAPIView):
                 # Resend verification email for unverified user
                 token = generate_email_token(user)
                 link = f"http://localhost:8080/auth/verify-email/?token={token}"
-                send_email_verification.delay(email, link)
+                send_email_verification(email, link)
                 return Response(
                     {"message": "Verification email sent to existing unverified user"},
                     status=status.HTTP_200_OK,
@@ -69,7 +69,7 @@ class UserRegistrationView(GenericAPIView):
         # Send verification email
         token = generate_email_token(user)
         link = f"http://localhost:8080/auth/verify-email/?token={token}"
-        send_email_verification.delay(email, link)
+        send_email_verification(email, link)
 
         return Response(
             {
