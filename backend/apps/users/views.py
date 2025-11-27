@@ -34,6 +34,7 @@ from .serializers import (
 from .tasks import send_email_verification
 from .utils import generate_email_token
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from rest_framework.authtoken.models import Token
 
 
 # class UserRegistrationView(GenericAPIView):
@@ -99,6 +100,14 @@ def google_oauth_initiate(request):
         {"detail": "Visit /accounts/google/login/ in your browser"},
         status=status.HTTP_200_OK,
     )
+
+
+@api_view(["GET"])
+def get_auth_token(request):
+    if request.user.is_authenticated:
+        token, created = Token.objects.get_or_create(user=request.user)
+        return Response({"token": token.key})
+    return Response({"error": "Not authenticated"}, status=401)
 
 
 class UserRegistrationView(generics.CreateAPIView):
