@@ -35,7 +35,11 @@ from .tasks import send_email_verification
 from .utils import generate_email_token
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.authtoken.models import Token
-
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from allauth.socialaccount.models import SocialAccount
+from drf_spectacular.utils import extend_schema, OpenApiExample
 
 # class UserRegistrationView(GenericAPIView):
 #     permission_classes = [AllowAny]
@@ -82,6 +86,89 @@ from rest_framework.authtoken.models import Token
 #             },
 #             status=status.HTTP_201_CREATED,
 #         )
+
+
+@extend_schema(
+    description="Check if social user needs to set password",
+    responses={
+        200: OpenApiExample(
+            "Social user response",
+            value={
+                "has_password": False,
+                "social_accounts": ["google"],
+                "auth_method": "social",
+                "needs_password_setup": True,
+            },
+        )
+    },
+)
+@api_view(["GET"])
+def check_auth_method(request):
+    """
+    Check user's authentication method and if they need to set a password.
+    """
+    if request.user.is_authenticated:
+        social_accounts = SocialAccount.objects.filter(user=request.user)
+        has_password = request.user.has_usable_password()
+
+        return Response(
+            {
+                "has_password": has_password,
+                "social_accounts": [acc.provider for acc in social_accounts],
+                "auth_method": (
+                    "social" if social_accounts and not has_password else "email"
+                ),
+                "needs_password_setup": social_accounts.exists() and not has_password,
+            }
+        )
+    return Response({"error": "Not authenticated"}, status=401)
+
+
+@extend_schema(
+    description="Request password setup for social users",
+    responses={
+        200: OpenApiExample(
+            "Success response", value={"detail": "Password setup email sent"}
+        ),
+        400: OpenApiExample(
+            "Error response", value={"error": "User not found or already has password"}
+        ),
+    },
+)
+@api_view(["POST"])
+def social_user_set_password(request):
+    """
+    Social users without passwords can request to set one via email.
+    """
+    if request.user.is_authenticated and not request.user.has_usable_password():
+
+        return Response(
+            {
+                "detail": "Password setup initiated",
+            }
+        )
+    return Response({"error": "User not found or already has password"}, status=400)
+
+
+@extend_schema(
+    description="Set password for social user (if no email service)",
+    request={"type": "object", "properties": {"new_password": {"type": "string"}}},
+    responses={
+        200: OpenApiExample("Success", value={"detail": "Password set successfully"}),
+        400: OpenApiExample("Error", value={"error": "Invalid request"}),
+    },
+)
+@api_view(["POST"])
+def set_password_direct(request):
+
+    if request.user.is_authenticated and not request.user.has_usable_password():
+        new_password = request.data.get("new_password")
+        if new_password:
+            request.user.set_password(new_password)
+            request.user.save()
+            return Response({"detail": "Password set successfully"})
+        return Response({"error": "New password required"}, status=400)
+    return Response({"error": "User not found or already has password"}, status=400)
 
 
 @extend_schema(

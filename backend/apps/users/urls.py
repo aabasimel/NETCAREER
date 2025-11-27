@@ -5,7 +5,13 @@ from django.views.generic import RedirectView
 
 from . import views
 
-from .views import google_oauth_initiate, get_auth_token
+from .views import (
+    google_oauth_initiate,
+    get_auth_token,
+    check_auth_method,
+    social_user_set_password,
+    set_password_direct,
+)
 
 router = DefaultRouter()
 router.register(r"users", views.UserViewSet, basename="users")
@@ -24,4 +30,15 @@ urlpatterns = [
     ),
     path("api/auth/google/initiate/", google_oauth_initiate, name="google_oauth_docs"),
     path("api/auth/token/", get_auth_token, name="get_token"),
+    path("auth/method/", check_auth_method, name="check_auth_method"),
+    path(
+        "auth/social/set-password/",
+        social_user_set_password,
+        name="social_set_password",
+    ),
+    path(
+        "auth/social/set-password-direct/",
+        set_password_direct,
+        name="set_password_direct",
+    ),
 ]
