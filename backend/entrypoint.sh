@@ -1,5 +1,5 @@
 #!/bin/bash
-APP_PORT=${PORT:-8080}
+APP_PORT=${PORT:-10000}
 set -e
 set -x
 cd /app/
