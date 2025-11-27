@@ -19,5 +19,4 @@ bash /app/migrate.sh
 
 /opt/venv/bin/celery -A config worker --loglevel=info --concurrency=1 &
 
-# Use Gunicorn from the Docker venv
 /opt/venv/bin/gunicorn --worker-tmp-dir /dev/shm config.wsgi:application --bind "0.0.0.0:${APP_PORT}"
