@@ -4,7 +4,7 @@ import jwt
 from django.conf import settings
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend, OrderingFilter
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, status, viewsets, permissions
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -35,52 +35,56 @@ from .tasks import send_email_verification
 from .utils import generate_email_token
 
 
-class UserRegistrationView(GenericAPIView):
-    permission_classes = [AllowAny]
+# class UserRegistrationView(GenericAPIView):
+#     permission_classes = [AllowAny]
+#     serializer_class = UserRegistrationSerializer
+
+#     def post(self, request):
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+
+#         email = serializer.validated_data.get("email")
+
+#         # Check if user already exists
+#         user = User.objects.filter(email=email).first()
+#         if user:
+#             if user.is_verified:
+#                 return Response(
+#                     {"error": "User with this email already exists and is verified"},
+#                     status=status.HTTP_400_BAD_REQUEST,
+#                 )
+#             else:
+#                 # Resend verification email for unverified user
+#                 token = generate_email_token(user)
+#                 link = f"http://localhost:8080/auth/verify-email/?token={token}"
+#                 send_email_verification.delay(email, link)
+#                 return Response(
+#                     {"message": "Verification email sent to existing unverified user"},
+#                     status=status.HTTP_200_OK,
+#                 )
+
+#         # Create new user using serializer
+#         user = serializer.save()
+
+#         # Send verification email
+#         token = generate_email_token(user)
+#         link = f"http://localhost:8080/auth/verify-email/?token={token}"
+#         send_email_verification.delay(email, link)
+
+#         return Response(
+#             {
+#                 "message": "User registered successfully. Verification email sent.",
+#                 "user_id": str(user.user_id),
+#                 "email": user.email,
+#                 "role": user.role,
+#             },
+#             status=status.HTTP_201_CREATED,
+#         )
+
+class UserRegistrationView(generics.CreateAPIView):
+    queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
-
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        email = serializer.validated_data.get("email")
-
-        # Check if user already exists
-        user = User.objects.filter(email=email).first()
-        if user:
-            if user.is_verified:
-                return Response(
-                    {"error": "User with this email already exists and is verified"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            else:
-                # Resend verification email for unverified user
-                token = generate_email_token(user)
-                link = f"http://localhost:8080/auth/verify-email/?token={token}"
-                send_email_verification(email, link)
-                return Response(
-                    {"message": "Verification email sent to existing unverified user"},
-                    status=status.HTTP_200_OK,
-                )
-
-        # Create new user using serializer
-        user = serializer.save()
-
-        # Send verification email
-        token = generate_email_token(user)
-        link = f"http://localhost:8080/auth/verify-email/?token={token}"
-        send_email_verification(email, link)
-
-        return Response(
-            {
-                "message": "User registered successfully. Verification email sent.",
-                "user_id": str(user.user_id),
-                "email": user.email,
-                "role": user.role,
-            },
-            status=status.HTTP_201_CREATED,
-        )
-
+    permission_classes=[permissions.AllowAny]
 
 class VerifyEmailView(APIView):
     serilaizer_class = VerifyEmailSerializer
