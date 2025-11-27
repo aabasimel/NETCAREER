@@ -56,6 +56,10 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
 ]
 
 MIDDLEWARE = [
@@ -155,6 +159,7 @@ AUTH_USER_MODEL = "users.User"
 AUTHENTICATION_BACKENDS = [
     "apps.users.backends.EmailTokenAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/1")
@@ -236,3 +241,24 @@ SIMPLE_JWT = {
 }
 
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": "1095001471410-lge512as6lmorqt33cpm70lbcg5hnj8q.apps.googleusercontent.com",
+            "secret": "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",
+            "key": "",
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}
+GOOGLE_OAUTH2_CLIENT_ID = (
+    "1095001471410-lge512as6lmorqt33cpm70lbcg5hmj8q.apps.googleusercontent.com"
+)
+GOOGLE_OAUTH2_CLIENT_SECRET = "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"

@@ -1,5 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
+from django.views.generic import RedirectView
+
 
 from . import views
 
@@ -13,4 +15,9 @@ urlpatterns = [
     path("auth/verify-email/", views.VerifyEmailView.as_view(), name="verify-email"),
     path("auth/logout/", views.UserLogoutView.as_view(), name="logout"),
     path("profile/", views.UserProfileView.as_view(), name="profile"),
+    path(
+        "google/login/",
+        RedirectView.as_view(url="/accounts/google/login/"),
+        name="google_login",
+    ),
 ]

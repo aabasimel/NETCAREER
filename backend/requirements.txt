@@ -25,3 +25,5 @@ environ
 drf-nested-routers
 django-extensions
 resend
+django-allauth[socialaccount]
+django-allauth
