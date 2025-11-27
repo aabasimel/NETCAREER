@@ -5,7 +5,7 @@ set -x
 cd /app/
 
 # Activate virtualenv
-source /venv/bin/activate
+source /opt/venv/bin/activate
 
 # Wait for Postgres
 echo "Waiting for Postgres at db:5432..."
