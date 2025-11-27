@@ -79,7 +79,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         password = validated_data.pop("password")
 
-        validate_password["is_verified"] = True
+        validated_data["is_verified"] = True
         # Check if unverified user already exists
         email = validated_data["email"]
         existing_user = User.objects.filter(email=email, is_verified=False).first()
