@@ -33,6 +33,7 @@ from .serializers import (
 )
 from .tasks import send_email_verification
 from .utils import generate_email_token
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 
 # class UserRegistrationView(GenericAPIView):
@@ -80,6 +81,24 @@ from .utils import generate_email_token
 #             },
 #             status=status.HTTP_201_CREATED,
 #         )
+
+
+@extend_schema(
+    description="Initiate Google OAuth login",
+    responses={
+        302: OpenApiParameter(name="Redirect", description="Redirects to Google OAuth")
+    },
+)
+@api_view(["GET"])
+def google_oauth_initiate(request):
+    """
+    Redirects to Google OAuth login page.
+    This is a browser-based flow and cannot be tested directly in Swagger.
+    """
+    return Response(
+        {"detail": "Visit /accounts/google/login/ in your browser"},
+        status=status.HTTP_200_OK,
+    )
 
 
 class UserRegistrationView(generics.CreateAPIView):

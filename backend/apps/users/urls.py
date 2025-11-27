@@ -5,6 +5,8 @@ from django.views.generic import RedirectView
 
 from . import views
 
+from .views import google_oauth_initiate
+
 router = DefaultRouter()
 router.register(r"users", views.UserViewSet, basename="users")
 
@@ -20,4 +22,5 @@ urlpatterns = [
         RedirectView.as_view(url="/accounts/google/login/"),
         name="google_login",
     ),
+    path("api/auth/google/initiate/", google_oauth_initiate, name="google_oauth_docs"),
 ]
