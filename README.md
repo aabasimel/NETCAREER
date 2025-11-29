@@ -40,7 +40,7 @@ A robust, scalable backend for a LinkedIn-like professional networking platform 
 
 # Architecture
 ```text
-linkedin-clone-backend/
+NetCareer/
 ├── backend/                 # Django Project Root
 │   ├── apps/               # Modular Applications
 │   │   ├── users/          # Authentication & User Management
