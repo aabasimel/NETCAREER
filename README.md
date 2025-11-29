@@ -24,7 +24,7 @@ A robust, scalable backend for a LinkedIn-like professional networking platform 
 - Save jobs for later application
 - Resume upload and management
 ## Professional Networking
-- ### Connection system with request/accept workflow
+- ##### Connection system with request/accept workflow
 - Professional profile viewing
 - Skill endorsements (extensible)
 - Company following system
