@@ -9,3 +9,11 @@ A robust, scalable backend for a LinkedIn-like professional networking platform 
 [![Celery](https://img.shields.io/badge/Celery-5.3-green)](https://docs.celeryq.dev/)
 [![Swagger UI](https://img.shields.io/badge/Swagger%20UI-API%20Docs-brightgreen)](https://swagger.io/tools/swagger-ui/)
 [![CI/CD](https://img.shields.io/badge/CI/CD-GitHub%2520Actions-success)](https://docs.github.com/actions)
+
+# Features
+## 👥User Management
+- Role-based authentication (Job Seeker, Employer, Admin)
+- JWT token-based authentication
+- User profiles with professional experience and education
+- Profile verification system
+
