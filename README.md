@@ -28,3 +28,30 @@ A robust, scalable backend for a LinkedIn-like professional networking platform 
 - Professional profile viewing
 - Skill endorsements (extensible)
 - Company following system
+## Content & Engagement
+- Professional pots with rich media support
+- Likes,comments and shares
+- Feed algorithm for personalized content
+- Post visibility controls (public/connections/private)
+## Company Pages
+- Company profile management
+- Company updates and posts
+- Follower system
+
+# Architecture
+```text
+linkedin-clone-backend/
+├── backend/                 # Django Project Root
+│   ├── apps/               # Modular Applications
+│   │   ├── users/          # Authentication & User Management
+│   │   ├── profiles/       # Professional Profiles
+│   │   ├── companies/      # Company Management
+│   │   ├── jobs/           # Job Platform
+│   │   ├── connections/    # Networking & Connections
+│   │   ├── posts/          # Content & Engagement
+│   │   ├── notifications/  # Notification System
+│   │   └── common/         # Shared Utilities
+│   ├── config/             # Project Configuration
+│   └── core/               # Core Utilities & Middleware
+├                 
+├── docs/                   # API Documentation
