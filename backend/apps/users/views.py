@@ -88,7 +88,6 @@ from drf_spectacular.utils import extend_schema, OpenApiExample
 #         )
 
 
-
 class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer

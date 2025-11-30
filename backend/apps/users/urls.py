@@ -6,7 +6,6 @@ from django.views.generic import RedirectView
 from . import views
 
 
-
 router = DefaultRouter()
 router.register(r"users", views.UserViewSet, basename="users")
 
@@ -17,5 +16,4 @@ urlpatterns = [
     path("auth/verify-email/", views.VerifyEmailView.as_view(), name="verify-email"),
     path("auth/logout/", views.UserLogoutView.as_view(), name="logout"),
     path("profile/", views.UserProfileView.as_view(), name="profile"),
-    
 ]
