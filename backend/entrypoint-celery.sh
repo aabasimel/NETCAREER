@@ -19,4 +19,4 @@ bash /app/migrate-celery.sh
 
 # Start Celery
 echo "Starting Celery worker..."
-exec /opt/venv/bin/celery -A product_order_api worker --loglevel=info
+exec /opt/venv/bin/celery -A config worker --loglevel=info
