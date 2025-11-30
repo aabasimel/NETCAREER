@@ -5,13 +5,7 @@ from django.views.generic import RedirectView
 
 from . import views
 
-from .views import (
-    google_oauth_initiate,
-    get_auth_token,
-    check_auth_method,
-    social_user_set_password,
-    set_password_direct,
-)
+
 
 router = DefaultRouter()
 router.register(r"users", views.UserViewSet, basename="users")
