@@ -23,22 +23,5 @@ urlpatterns = [
     path("auth/verify-email/", views.VerifyEmailView.as_view(), name="verify-email"),
     path("auth/logout/", views.UserLogoutView.as_view(), name="logout"),
     path("profile/", views.UserProfileView.as_view(), name="profile"),
-    path(
-        "google/login/",
-        RedirectView.as_view(url="/accounts/google/login/"),
-        name="google_login",
-    ),
-    path("api/auth/google/initiate/", google_oauth_initiate, name="google_oauth_docs"),
-    path("api/auth/token/", get_auth_token, name="get_token"),
-    path("auth/method/", check_auth_method, name="check_auth_method"),
-    path(
-        "auth/social/set-password/",
-        social_user_set_password,
-        name="social_set_password",
-    ),
-    path(
-        "auth/social/set-password-direct/",
-        set_password_direct,
-        name="set_password_direct",
-    ),
+    
 ]
