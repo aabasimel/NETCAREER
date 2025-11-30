@@ -54,4 +54,68 @@ NetCareer/
 │   ├── config/             # Project Configuration
 │   └── core/               # Core Utilities & Middleware
 ├                 
+## Getting Started
+
+You can run locally with Docker (recommended) or with a Python virtualenv.
+
+### Prerequisites
+- Docker and Docker Compose
+- Or Python 3.14 with virtualenv
+
+### Environment
+Create a `.env` with at least:
+
+```env
+SECRET_KEY=your-secret-key
+DEBUG=True
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=you@example.com
+EMAIL_HOST_PASSWORD=app-password
+DEFAULT_FROM_EMAIL=you@example.com
+REDIS_URL=redis://localhost:6379/1
+```
+
+### Run with Docker
+
+```bash
+cd backend
+docker compose up --build
+```
+
+### Run locally (virtualenv)
+
+```bash
+# macOS zsh
+python3 -m venv nvenv
+source nvenv/bin/activate
+pip install -r backend/requirements.txt
+
+export DJANGO_SETTINGS_MODULE=config.settings
+cd backend
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
+```
+
+## Authentication
+
+JWT-based auth with email verification. See `backend/docs/api/authentication.md` for full endpoint details and curl examples.
+
+Key endpoints:
+- `POST /auth/register/`
+- `GET /auth/verify-email/?token=...`
+- `POST /auth/login/`
+- `POST /auth/logout/`
+- `GET|PATCH /profile/`
+
+## Development
+
+- Migrations: `python manage.py makemigrations && python manage.py migrate`
+- Superuser: `python manage.py createsuperuser`
+- Celery workers configured in `backend/config/celery.py`
+
+## License
+
+MIT — see `LICENSE`.
 ├── docs/                   # API Documentation
