@@ -40,6 +40,8 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from allauth.socialaccount.models import SocialAccount
 from drf_spectacular.utils import extend_schema, OpenApiExample
+from rest_framework.throttling import ScopedRateThrottle
+
 
 # class UserRegistrationView(GenericAPIView):
 #     permission_classes = [AllowAny]
@@ -133,6 +135,8 @@ class VerifyEmailView(APIView):
 class UserLoginView(GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = UserLoginSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "login"
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)

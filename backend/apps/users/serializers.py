@@ -14,7 +14,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     password_confirm = serializers.CharField(
         write_only=True, min_length=8, required=True
     )
-    company_name = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = User
@@ -29,7 +28,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             "admin_requested",
             "is_verified",
             "phone_number",
-            "company_name",
         ]
         read_only_fields = ["user_id", "created_at", "updated_at", "is_verified"]
         extra_kwargs = {"email": {"validators": []}}
@@ -63,13 +61,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"role": "Admin role is reserved for superusers"}
             )
-
-        if role == "employer":
-            company_name = attrs.get("company_name")
-            if not company_name:
-                raise serializers.ValidationError(
-                    {"company_name": "Company name is required for employers"}
-                )
 
         return attrs
 

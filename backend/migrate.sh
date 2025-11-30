@@ -29,13 +29,23 @@ first_name = 'Admin'
 last_name = 'Admin'
 
 if not User.objects.filter(email=email).exists():
-    User.objects.create_superuser(
+    admin = User.objects.create_superuser(
         email=email,
         password=password,
         first_name=first_name,
         last_name=last_name
     )
-    print(f'Superuser created: {email}')
+    admin.is_verified = True
+    admin.is_active = True
+    admin.save()
+    print(f'Superuser created & verified: {email}')
 else:
-    print(f'Superuser already exists: {email}')
+    admin = User.objects.get(email=email)
+    if not admin.is_verified:
+        admin.is_verified = True
+        admin.is_active = True
+        admin.save()
+        print(f'Superuser verified: {email}')
+    else:
+        print(f'Superuser already exists & verified: {email}')
 "

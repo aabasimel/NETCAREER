@@ -95,6 +95,7 @@ Errors:
 
 - 401 Unauthorized: invalid credentials
 - 403 Forbidden: email not verified
+- 429 Too Many Requests: rate limit exceeded (login is limited to 5 requests/min per client)
 
 ### Logout (invalidate all tokens)
 
